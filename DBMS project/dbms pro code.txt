@@ -1,0 +1,202 @@
+create database stockmarket;
+use stockmarket;
+create table member
+(
+mid int,
+mname varchar(20),
+pass varchar(10),
+balance numeric(20,5),
+primary key(mid)
+);
+select* from member;
+create table currency
+(
+cname varchar(20),
+cprice float(2),
+oprice float(2),
+diff float(2),
+primary key(cname,cprice)
+);
+select* from currency;
+
+create table member_currency
+(
+mid int ,
+cname varchar(20),
+cprice float(2),
+quantity int,
+invest_amt float(2),
+gain float(2),
+tgain float(2),
+foreign key(mid) references member(mid)
+ON UPDATE CASCADE
+on delete cascade,
+foreign key(cname,cprice) references currency(cname,cprice)
+on update cascade
+on delete cascade
+);
+select* from member_currency;
+
+create table commodity
+(
+cmname varchar(20),
+cmprice float(2),
+oprice float(2),
+diff float(2),
+unit varchar(10),
+primary key(cmname,cmprice,unit)
+);
+select* from commodity;
+
+create table member_commodity
+(
+mid int,
+cmname varchar(20),
+cmprice float(2),
+invest_amt float(2),
+quantity int,
+unit varchar(10),
+gain float(2),
+tgain float(2),
+foreign key(mid) references member(mid)
+on update cascade
+on delete cascade,
+foreign key(cmname,cmprice,unit) references commodity(cmname,cmprice,unit)
+on update cascade
+on delete cascade
+);
+select* from member_commodity;
+
+create table company
+(
+comp_name varchar(50),
+industry varchar(50),
+tshares int,
+curr_price float(2),
+old_price float(2),
+diff float(2),
+avail_shares int,
+product numeric(15,4),
+primary key(comp_name,curr_price)
+);
+select* from company;
+
+create table shares
+(
+mid int,
+comp_name varchar(50),
+curr_price float(2),
+invest_amt float(2),
+quantity int,
+gain float(2),
+tgain float(2),
+foreign key(mid) references member(mid)
+on update cascade
+on delete cascade,
+foreign key(comp_name,curr_price) references company(comp_name,curr_price)
+on update cascade
+on delete cascade
+);
+select* from shares;
+
+create table administrator
+(
+admin_name varchar(20),
+admin_pass varchar(10),
+primary key(admin_name)
+);
+select* from administrator;
+
+insert into member values (11111, 'Prajakta Shinde','abc',100000.00);
+insert into member values (22222, 'Hiral Shah','123',50000.00);
+select* from member;
+
+insert into currency values ('US $/Rupee',55.2,0.0,0.0);
+insert into currency values ('Euros/Rupee',69.4,0.0,0.0);
+insert into currency values ('AUS $/Rupee',52.72,0.0,0.0);
+insert into currency values ('Japenese yen/Rupee',0.62,0.0,0.0);
+insert into currency values ('Renminbi/Rupee',8.12,0.0,0.0);
+insert into currency values ('Pounds/Pupee',85.8,0.0,0.0);
+insert into currency values ('Dirhams/Rupee',14.00,0.0,0.0);
+insert into currency values ('singapore $/Rupee',43.77,0.0,0.0);
+insert into currency values ('Taiwan $/Rupee',1.82,0.0,0.0);
+insert into currency values ('Ringgit/Rupee',15.67,0.0,0.0);
+select* from currency;
+
+insert into commodity values ('Gold',28345.62,0.0,0.0,'10 gm');
+insert into commodity values ('Silver',55500.2,0.0,0.0,'kg');
+insert into commodity values ('Crudeoil',5237,0.0,0.0,'barrel');
+insert into commodity values ('Copper',435.5,0.0,0.0,'kg');
+insert into commodity values ('Zinc',102.10,0.0,0.0,'kg');
+insert into commodity values ('Lead',113.69,0.0,0.0,'kg');
+insert into commodity values ('Nickel',910.45,0.0,0.0,'kg');
+insert into commodity values ('Aluminium',106.80,0.0,0.0,'kg');
+insert into commodity values ('Natural Gas',194.80,0.0,0.0,'kg');
+insert into commodity values ('Cotton',16790.65,0.0,0.0,'kg');
+select* from commodity;
+
+insert into company values('Cipla','Pharmaceuticals', 56000, 105.25,0.0,0.0,40000,0.0);
+insert into company values('Wipro','Information Technology', 100000, 65.23,0.0,0.0,80000,0.0);
+insert into company values('ICICI Bank','Banking',70000,362.14,0.0,0.0,60000,0.0);
+insert into company values('Mahindra & Mahindra','Automotive', 60000, 203.16,0.0,0.0,45000,0.0);
+insert into company values('Tata Power','Power', 20000, 70.36,0.0,0.0,10000,0.0);
+insert into company values('Reliance Industries','Oil and gas', 90000, 513.64,0.0,0.0,75000,0.0);
+insert into company values('DLF','Real estate',65000,220.5,0.0,0.0,50000,0.0);
+insert into company values('Sterlite Industries','Metals and Mining', 80000, 80.45,0.0,0.0,62000,0.0);
+insert into company values('Infosys','Information Technology', 75000, 110.89,0.0,0.0,58000,0.0);
+insert into company values('Bharti Airtel','Telecommunication', 50000, 1050.21,0.0,0.0,43000,0.0);
+insert into company values('State Bank Of India','Banking', 32000, 165.91,0.0,0.0,25000,0.0);
+insert into company values('Oil and Natural Gas Corporation','Oil and gas', 30000,60.95,0.0,0.0,20000,0.0);
+insert into company values('Jindal Steel & Power','Steel & Power', 75000,254.123,0.0,0.0,64000,0.0);
+insert into company values('Maruti Suzuki','Automotive', 85000, 756.46,0.0,0.0,72000,0.0);
+insert into company values('Hindustan Unilever','Consumer goods', 45000,564.78,0.0,0.0,31000,0.0);
+UPDATE company
+SET product=avail_shares*curr_price;
+select * from company;
+
+CREATE VIEW comp
+AS
+SELECT comp_name,industry,avail_shares,curr_price,diff
+FROM company;
+select * from comp;
+insert into member_currency values(11111,'AUS $/Rupee', 52.72, 50, 50.32, 0, 0);
+insert into member_currency values(11111,'US $/Rupee', 55.2, 50, 58.56, 0, 0);
+insert into member_currency values(11111,'Ringgit/Rupee', 15.67, 50, 16.75, 0, 0);
+insert into member_currency values(22222,'AUS $/Rupee', 52.72, 50, 53.58, 0, 0);
+insert into member_currency values(22222,'Pounds/Pupee', 85.8, 75, 86.68, 0, 0);
+insert into member_currency values(22222,'Ringgit/Rupee', 15.67,80, 14.77, 0, 0);
+insert into member_commodity values(11111,'Gold', 28345.62, 27468.32, 7,'10 gm', 0, 0);
+insert into member_commodity values(11111,'Copper', 435.5, 440.3, 5,'kg', 0, 0);
+insert into member_commodity values(22222,'Silver', 55500.2, 55515.66, 0.5,'kg', 0, 0);
+insert into member_commodity values(22222,'Cotton', 16790.65, 15398.52, 3,'kg', 0, 0);
+select* from member_commodity ;
+
+insert into shares values(11111,'Wipro', 65.23, 68.8, 100, 0, 0);
+insert into shares values(11111,'Cipla', 105.25, 106.43, 80, 0, 0);
+insert into shares values(11111,'DLF', 220.5, 218.94, 25, 0, 0);
+insert into shares values(11111,'ICICI Bank', 362.14, 363, 50, 0, 0);
+insert into shares values(11111,'Infosys', 110.89, 109.3, 60, 0, 0);
+insert into shares values(11111,'Mahindra & Mahindra', 203.16, 200.9, 45,0, 0);
+insert into shares values(11111,'Reliance Industries', 513.64, 513.1, 105, 0, 0);
+insert into shares values(22222,'Bharti Airtel', 1050.21, 1045.3, 40, 0, 0);
+insert into shares values(22222,'Wipro', 65.23, 66.8,90, 0, 0);
+insert into shares values(22222,'Jindal Steel & Power', 254.123, 255, 60, 0, 0);
+insert into shares values(22222,'Maruti Suzuki', 756.46, 755.4, 50, 0, 0);
+insert into shares values(22222,'Hindustan Unilever', 564.78, 564.3, 30, 0, 0);
+insert into shares values(22222,'Tata Power', 70.36, 69.8, 100, 0, 0);
+select * from shares;
+insert into administrator values('Koushik123','777');
+select * from administrator;
+update member_currency
+set gain=cprice-invest_amt;
+update member_currency
+set tgain=gain*quantity;
+update member_commodity
+set gain=cmprice-invest_amt;
+update member_commodity
+set tgain=gain*quantity;
+update shares
+set gain=curr_price-invest_amt;
+update shares
+set tgain=gain*quantity; 
+show tables;
